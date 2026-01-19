@@ -42,10 +42,10 @@ export async function POST(req: NextRequest) {
     }
 
     // Debug: Log what's in the database
-    console.log("User OTP from DB:", user.otp);
-    console.log("User OTP Expiry from DB:", user.otpExpiry);
-    console.log("Current time:", new Date());
-    console.log("OTP provided:", otp);
+    // console.log("User OTP from DB:", user.otp);
+    // console.log("User OTP Expiry from DB:", user.otpExpiry);
+    // console.log("Current time:", new Date());
+    // console.log("OTP provided:", otp);
 
     // Check if OTP matches and is not expired
     if (!user.otp || user.otp !== otp) {

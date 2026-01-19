@@ -13,11 +13,11 @@ const handler = NextAuth({
       async authorize(credentials) {
         try {
           if (!credentials?.identifier || !credentials?.otp) {
-            console.log("Missing credentials");
+            // console.log("Missing credentials");
             return null;
           }
 
-          console.log("Authorizing:", credentials.identifier);
+          // console.log("Authorizing:", credentials.identifier);
 
           // Direct database verification (simpler approach)
           const { getDatabase } = await import("@/lib/mongodb");
@@ -47,13 +47,13 @@ const handler = NextAuth({
           const user = await usersCollection.findOne(query);
 
           if (!user) {
-            console.log("No user found or invalid OTP");
+            // console.log("No user found or invalid OTP");
             return null;
           }
 
           // Check if OTP is expired
           if (user.otpExpiry && new Date(user.otpExpiry) < new Date()) {
-            console.log("OTP expired");
+            // console.log("OTP expired");
             return null;
           }
 
@@ -70,7 +70,7 @@ const handler = NextAuth({
           const registrationNumber =
             user.registration_num || user["Registration Number"] || "";
 
-          console.log("User authorized:", userEmail);
+          // console.log("User authorized:", userEmail);
 
           return {
             id: user._id.toString(),

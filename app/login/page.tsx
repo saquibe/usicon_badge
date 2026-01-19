@@ -40,7 +40,7 @@ export default function LoginPage() {
 
       const data = await response.json();
 
-      console.log("Send OTP response:", data);
+      // console.log("Send OTP response:", data);
 
       if (response.ok) {
         setSuccess(data.message);
@@ -62,7 +62,7 @@ export default function LoginPage() {
     setError("");
 
     try {
-      console.log("Verifying OTP for:", identifier);
+      // console.log("Verifying OTP for:", identifier);
 
       const result = await signIn("credentials", {
         identifier,
@@ -71,7 +71,7 @@ export default function LoginPage() {
         callbackUrl: "/badge",
       });
 
-      console.log("SignIn result:", result);
+      // console.log("SignIn result:", result);
 
       if (result?.error) {
         console.error("SignIn error:", result.error);
@@ -85,7 +85,7 @@ export default function LoginPage() {
           setError("Authentication failed. Please try again.");
         }
       } else if (result?.ok) {
-        console.log("Login successful, redirecting...");
+        // console.log("Login successful, redirecting...");
         router.push("/badge");
       } else {
         setError("Unexpected error occurred.");

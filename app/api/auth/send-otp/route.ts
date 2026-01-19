@@ -65,8 +65,8 @@ export async function POST(req: NextRequest) {
     const otp = generateOTP();
     const otpExpiry = generateOTPExpiry();
 
-    console.log("Generated OTP:", otp);
-    console.log("OTP Expiry:", otpExpiry);
+    // console.log("Generated OTP:", otp);
+    // console.log("OTP Expiry:", otpExpiry);
 
     // Store OTP in database
     const updateResult = await usersCollection.updateOne(
@@ -79,12 +79,12 @@ export async function POST(req: NextRequest) {
       },
     );
 
-    console.log("Update result:", updateResult);
+    // console.log("Update result:", updateResult);
 
     // Verify the OTP was stored
     const updatedUser = await usersCollection.findOne({ _id: user._id });
-    console.log("Updated user OTP:", updatedUser?.otp);
-    console.log("Updated user OTP Expiry:", updatedUser?.otpExpiry);
+    // console.log("Updated user OTP:", updatedUser?.otp);
+    // console.log("Updated user OTP Expiry:", updatedUser?.otpExpiry);
 
     // Send OTP via email or SMS
     let sentVia = "";
