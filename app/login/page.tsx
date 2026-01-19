@@ -40,7 +40,7 @@ export default function LoginPage() {
 
       const data = await response.json();
 
-      // console.log(data);
+      console.log("Send OTP response:", data);
 
       if (response.ok) {
         setSuccess(data.message);
@@ -49,6 +49,7 @@ export default function LoginPage() {
         setError(data.error || "Failed to send OTP");
       }
     } catch (err: any) {
+      console.error("Send OTP error:", err);
       setError(err.message || "Something went wrong");
     } finally {
       setLoading(false);
@@ -61,19 +62,37 @@ export default function LoginPage() {
     setError("");
 
     try {
+      console.log("Verifying OTP for:", identifier);
+
       const result = await signIn("credentials", {
         identifier,
         otp,
         redirect: false,
+        callbackUrl: "/badge",
       });
 
+      console.log("SignIn result:", result);
+
       if (result?.error) {
-        setError("Invalid OTP. Please try again.");
+        console.error("SignIn error:", result.error);
+
+        // Check specific error types
+        if (result.error.includes("CredentialsSignin")) {
+          setError("Invalid OTP. Please try again.");
+        } else if (result.error.includes("401")) {
+          setError("Invalid credentials. Please check your OTP.");
+        } else {
+          setError("Authentication failed. Please try again.");
+        }
       } else if (result?.ok) {
+        console.log("Login successful, redirecting...");
         router.push("/badge");
+      } else {
+        setError("Unexpected error occurred.");
       }
     } catch (err: any) {
-      setError(err.message || "Something went wrong");
+      console.error("SignIn exception:", err);
+      setError(err.message || "Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -90,43 +109,32 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          {/* Branding Image */}
-          <div className="relative w-full flex justify-center mb-10 mt-[-100px]">
+          <div className="relative w-full flex justify-center mb-4 mt-[-40px]">
             <Image
-              src="/aoicon-image.jpeg"
-              alt="AOICON 2026 Kolkata"
+              src="/USICON LOGO.png"
+              alt="USICON 2026 Indore"
               width={420}
               height={140}
               priority
               className="
-        w-full
-        max-w-[280px]
-        sm:max-w-[340px]
-        md:max-w-[420px]
-        h-auto
-        object-contain
-      "
+                w-full
+                max-w-[280px]
+                sm:max-w-[340px]
+                md:max-w-[420px]
+                h-auto
+                object-contain
+              "
             />
           </div>
-
-          {/* <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
-            AOICON 2026
-          </h1>
-          <p className="text-sm sm:text-lg text-gray-600">KOLKATA</p> */}
         </div>
 
         <Card className="shadow-2xl border-0">
-          <CardHeader className="space-y-1 pb-4">
+          <CardHeader className="space-y-1 pb-2 pt-4">
             <CardTitle className="text-xl text-center text-gray-600">
               {step === "identifier"
                 ? "Enter your registered email or mobile number"
                 : "Enter the OTP sent to your email/mobile"}
             </CardTitle>
-            {/* <CardDescription className="text-center">
-              {step === "identifier"
-                ? "Enter your registered email or mobile number"
-                : "Enter the OTP sent to your email/mobile"}
-            </CardDescription> */}
           </CardHeader>
           <CardContent>
             {error && (
@@ -159,9 +167,6 @@ export default function LoginPage() {
                       <Phone className="absolute left-3 top-4 h-5 w-5 text-gray-400" />
                     )}
                   </div>
-                  {/* <p className="text-xs text-gray-500 pl-1">
-                    Enter your registered email or 10-digit mobile number
-                  </p> */}
                 </div>
 
                 <Button

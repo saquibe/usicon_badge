@@ -1,13 +1,15 @@
-import axios from 'axios';
+import axios from "axios";
 
 export async function sendEmail(email: string, otp: string) {
   try {
     const apiKey = process.env.ZEPTOMAIL_API_KEY;
-    const fromEmail = process.env.ZEPTOMAIL_FROM_EMAIL || 'noreply@registrationteam.in';
-    const fromName = process.env.ZEPTOMAIL_FROM_NAME || 'AOICON 2026 Registration Team';
+    const fromEmail =
+      process.env.ZEPTOMAIL_FROM_EMAIL || "noreply@registrationteam.in";
+    const fromName =
+      process.env.ZEPTOMAIL_FROM_NAME || "USICON 2026 Registration Team";
 
     if (!apiKey) {
-      throw new Error('ZeptoMail API key not configured');
+      throw new Error("ZeptoMail API key not configured");
     }
 
     const htmlContent = `
@@ -27,12 +29,12 @@ export async function sendEmail(email: string, otp: string) {
       <body>
         <div class="container">
           <div class="header">
-            <h1>AOICON 2026 KOLKATA</h1>
+            <h1>USICON 2026 INDORE</h1>
             <p>Verification Code</p>
           </div>
           <div class="content">
             <p>Dear Participant,</p>
-            <p>Your One-Time Password (OTP) for accessing your AOICON 2026 KOLKATA badge is:</p>
+            <p>Your One-Time Password (OTP) for accessing your USICON 2026 INDORE badge is:</p>
             <div class="otp-box">
               <div class="otp">${otp}</div>
             </div>
@@ -41,7 +43,7 @@ export async function sendEmail(email: string, otp: string) {
             <p>If you did not request this OTP, please ignore this email.</p>
             <div class="footer">
               <p>This is an automated email. Please do not reply to this message.</p>
-              <p>&copy; 2026 AOICON KOLKATA. All rights reserved.</p>
+              <p>&copy; 2026 USICON INDORE. All rights reserved.</p>
             </div>
           </div>
         </div>
@@ -50,33 +52,33 @@ export async function sendEmail(email: string, otp: string) {
     `;
 
     const response = await axios.post(
-      'https://api.zeptomail.in/v1.1/email',
+      "https://api.zeptomail.in/v1.1/email",
       {
         from: {
           address: fromEmail,
-          name: fromName
+          name: fromName,
         },
         to: [
           {
             email_address: {
-              address: email
-            }
-          }
+              address: email,
+            },
+          },
         ],
-        subject: 'Your OTP for AOICON 2026 KOLKATA',
-        htmlbody: htmlContent
+        subject: "Your OTP for AOICON 2026 KOLKATA",
+        htmlbody: htmlContent,
       },
       {
         headers: {
-          'Authorization': apiKey,
-          'Content-Type': 'application/json'
-        }
-      }
+          Authorization: apiKey,
+          "Content-Type": "application/json",
+        },
+      },
     );
 
     return response.data;
   } catch (error) {
-    console.error('Email sending error:', error);
-    throw new Error('Failed to send email');
+    console.error("Email sending error:", error);
+    throw new Error("Failed to send email");
   }
 }

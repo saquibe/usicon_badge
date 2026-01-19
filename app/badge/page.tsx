@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Loader2, Download, Share2, Award, Hash } from "lucide-react";
+import { Loader2, Download, Share2, Receipt } from "lucide-react";
 import { toPng } from "html-to-image";
 
 export default function BadgePage() {
@@ -13,6 +13,7 @@ export default function BadgePage() {
   const router = useRouter();
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [loading, setLoading] = useState(false);
+  const [receiptLoading, setReceiptLoading] = useState(false);
   const badgeRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,10 +34,10 @@ export default function BadgePage() {
     try {
       const QRCode = await import("qrcode");
       const url = await QRCode.toDataURL(data, {
-        width: 150, // Smaller for better fit
-        margin: 0, // No margin
+        width: 150,
+        margin: 0,
         color: {
-          dark: "#000000", // Black QR code
+          dark: "#000000",
           light: "#ffffff",
         },
       });
@@ -46,19 +47,22 @@ export default function BadgePage() {
     }
   };
 
-  if (status === "loading") {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-      </div>
-    );
-  }
+  // In BadgePage component, update handleDownloadReceipt function
+  const handleDownloadReceipt = async () => {
+    setReceiptLoading(true);
+    try {
+      const user = session?.user as any;
 
-  if (!session?.user) {
-    return null;
-  }
-
-  const user = session.user as any;
+      // Open receipt page in new tab
+      const receiptUrl = `/receipt?id=${encodeURIComponent(user.registrationNumber)}`;
+      window.open(receiptUrl, "_blank");
+    } catch (error: any) {
+      console.error("Receipt error:", error);
+      alert("Failed to open receipt. Please try again.");
+    } finally {
+      setReceiptLoading(false);
+    }
+  };
 
   const handleDownload = async () => {
     if (!badgeRef.current) return;
@@ -67,7 +71,6 @@ export default function BadgePage() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 200));
 
-      // Get the actual dimensions
       const width = badgeRef.current.offsetWidth;
       const height = badgeRef.current.offsetHeight;
 
@@ -90,7 +93,7 @@ export default function BadgePage() {
       });
 
       const link = document.createElement("a");
-      link.download = `AOICON-2026-Badge-${user.registrationNumber}.png`;
+      link.download = `USICON-2026-Badge-${(session?.user as any).registrationNumber}.png`;
       link.href = dataUrl;
       link.click();
     } catch (error) {
@@ -128,18 +131,18 @@ export default function BadgePage() {
       const blob = await (await fetch(dataUrl)).blob();
       const file = new File(
         [blob],
-        `AOICON-2026-Badge-${user.registrationNumber}.png`,
+        `USICON-2026-Badge-${(session?.user as any).registrationNumber}.png`,
         {
           type: "image/png",
-        }
+        },
       );
 
       if (navigator.share && navigator.canShare?.({ files: [file] })) {
         try {
           await navigator.share({
             files: [file],
-            title: `AOICON 2026 Badge - ${user.name}`,
-            text: `My AOICON 2026 KOLKATA Badge - Registration: ${user.registrationNumber}`,
+            title: `USICON 2026 Badge - ${(session?.user as any).name}`,
+            text: `My USICON 2026 INDORE Badge - Registration: ${(session?.user as any).registrationNumber}`,
           });
         } catch (err) {
           console.error("Share error:", err);
@@ -157,19 +160,23 @@ export default function BadgePage() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex items-center justify-center px-4">
-      <div className="max-w-sm w-full">
-        {/* <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 mb-2 shadow-lg">
-            <Award className="w-6 h-6 text-white" />
-          </div>
-          <h1 className="text-xl font-bold text-gray-900 mb-1">
-            Digital Conference Badge
-          </h1>
-          <p className="text-gray-600 text-xs">AOICON 2026 • KOLKATA</p>
-        </div> */}
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+      </div>
+    );
+  }
 
+  if (!session?.user) {
+    return null;
+  }
+
+  const user = session.user as any;
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex flex-col items-center justify-center px-4 py-8">
+      <div className="max-w-sm w-full">
         {/* Badge Container */}
         <div
           className="mb-6"
@@ -187,13 +194,10 @@ export default function BadgePage() {
             {/* Badge Header */}
             <div className="bg-gradient-to-br from-blue-600 to-blue-800 px-4 py-5 text-center relative overflow-hidden">
               <div className="relative">
-                {/* <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm mb-2 shadow">
-                  <Award className="w-6 h-6 text-white" />
-                </div> */}
                 <h2 className="text-xl font-bold text-white mb-1">
-                  AOICON 2026
+                  USICON 2026
                 </h2>
-                <p className="text-sm text-blue-100">KOLKATA</p>
+                <p className="text-sm text-blue-100">INDORE</p>
               </div>
             </div>
 
@@ -234,29 +238,12 @@ export default function BadgePage() {
                 </div>
               )}
             </div>
-
-            {/* Badge Footer */}
-            {/* <div className="bg-gray-50 px-4 py-3 border-t border-gray-300">
-              <div className="flex justify-between text-xs text-gray-600">
-                <div className="text-center">
-                  <p className="font-semibold">YEAR</p>
-                  <p>2026</p>
-                </div>
-                <div className="text-center">
-                  <p className="font-semibold">EVENT</p>
-                  <p>AOICON</p>
-                </div>
-                <div className="text-center">
-                  <p className="font-semibold">VENUE</p>
-                  <p>KOLKATA</p>
-                </div>
-              </div>
-            </div> */}
           </Card>
         </div>
 
         {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-3 ignore-in-image mt-10">
+        <div className="grid grid-cols-3 gap-3 ignore-in-image mt-6">
+          {/* Download Badge Button */}
           <Button
             onClick={handleDownload}
             disabled={loading}
@@ -271,11 +258,32 @@ export default function BadgePage() {
             ) : (
               <>
                 <Download className="mr-2 h-3 w-3" />
-                Download
+                Badge
               </>
             )}
           </Button>
 
+          {/* Download Receipt Button */}
+          <Button
+            onClick={handleDownloadReceipt}
+            disabled={receiptLoading}
+            className="h-10 text-sm bg-gradient-to-r from-green-600 to-green-800 hover:from-green-700 hover:to-green-900"
+            size="sm"
+          >
+            {receiptLoading ? (
+              <>
+                <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                Generating...
+              </>
+            ) : (
+              <>
+                <Receipt className="mr-2 h-3 w-3" />
+                Receipt
+              </>
+            )}
+          </Button>
+
+          {/* Share Button */}
           <Button
             onClick={handleShare}
             disabled={loading}
@@ -283,22 +291,20 @@ export default function BadgePage() {
             className="h-10 text-sm border border-gray-500 hover:bg-blue-50 ignore-in-image"
             size="sm"
           >
-            {loading ? (
-              <>
-                <Loader2 className="mr-2 h-3 w-3 animate-spin" />
-                Processing...
-              </>
-            ) : (
-              <>
-                <Share2 className="mr-2 h-3 w-3" />
-                Share
-              </>
-            )}
+            <Share2 className="mr-2 h-3 w-3" />
+            Share
           </Button>
         </div>
 
+        {/* Conference Info */}
+        {/* <div className="mt-8 text-center text-sm text-gray-600">
+          <p className="font-semibold">USICON 2026</p>
+          <p className="text-xs">January 29th - February 1st, 2026</p>
+          <p className="text-xs">Indore, Madhya Pradesh</p>
+        </div> */}
+
         {/* Return Button */}
-        <div className="text-center ignore-in-image">
+        <div className="text-center ignore-in-image mt-6">
           <Button
             variant="ghost"
             onClick={() => router.push("/login")}
@@ -307,6 +313,11 @@ export default function BadgePage() {
           >
             ← Back to Login
           </Button>
+        </div>
+
+        {/* Note about receipts */}
+        <div className="text-center mt-4 text-xs text-gray-500">
+          <p>Click "Receipt" to download your payment receipt in PDF format</p>
         </div>
       </div>
     </div>

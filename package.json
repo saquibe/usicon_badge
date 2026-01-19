@@ -63,6 +63,7 @@
     "next-auth": "^4.24.13",
     "next-themes": "^0.3.0",
     "nodemailer": "^7.0.12",
+    "pdfkit": "^0.17.2",
     "postcss": "8.4.30",
     "qrcode": "^1.5.4",
     "react": "18.2.0",
@@ -80,6 +81,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/pdfkit": "^0.17.4",
     "@types/qrcode": "^1.5.6"
   }
 }

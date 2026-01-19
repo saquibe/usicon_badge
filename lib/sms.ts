@@ -14,12 +14,12 @@ export async function sendSMS(mobile: string, otp: string) {
     const formattedMobile = mobile.replace(/^0|^\+91|^91/, ""); // Remove prefixes
     if (!/^\d{10}$/.test(formattedMobile)) {
       throw new Error(
-        `Invalid mobile number format: ${mobile}. Expected 10 digits.`
+        `Invalid mobile number format: ${mobile}. Expected 10 digits.`,
       );
     }
 
     // Use the exact message template required by your SMS provider
-    const message = `Login OTP for AOICON 2026 Registration is ${otp}. Do not share this OTP to anyone for security reasons. - SaaScraft Studio`;
+    const message = `Login OTP for USICON 2026 Registration is ${otp}. Do not share this OTP to anyone for security reasons. - SaaScraft Studio`;
 
     // Change from axios.get to axios.post
     const response = await axios.post(
@@ -43,7 +43,7 @@ export async function sendSMS(mobile: string, otp: string) {
         headers: {
           Accept: "application/json", // Specify expected response format
         },
-      }
+      },
     );
 
     console.log("SMS API Response:", response.data); // Log response for debugging

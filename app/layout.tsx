@@ -6,8 +6,8 @@ import { Providers } from "./providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "AOICON 2026 KOLKATA - Digital Badge",
-  description: "Access your AOICON 2026 KOLKATA digital badge",
+  title: "USICON 2026 INDORE - Digital Badge",
+  description: "Access your USICON 2026 INDORE digital badge",
 };
 
 export default function RootLayout({

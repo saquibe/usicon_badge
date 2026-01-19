@@ -1,3 +1,4 @@
+// types/next-auth.d.ts
 import NextAuth from "next-auth";
 
 declare module "next-auth" {
@@ -7,7 +8,7 @@ declare module "next-auth" {
     email: string;
     registrationNumber: string;
     mobile: string;
-    certUrl: string;
+    certUrl?: string;
   }
 
   interface Session {
@@ -17,7 +18,7 @@ declare module "next-auth" {
       email: string;
       registrationNumber: string;
       mobile: string;
-      certUrl: string;
+      certUrl?: string;
     };
   }
 }
@@ -27,6 +28,6 @@ declare module "next-auth/jwt" {
     id: string;
     registrationNumber: string;
     mobile: string;
-    certUrl: string;
+    certUrl?: string;
   }
 }
