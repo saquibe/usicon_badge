@@ -46,7 +46,7 @@ export async function sendSMS(mobile: string, otp: string) {
       },
     );
 
-    console.log("SMS API Response:", response.data); // Log response for debugging
+    // console.log("SMS API Response:", response.data); // Log response for debugging
 
     // Check the response. Success codes vary by provider (sometimes '000' or '200').
     if (response.data.ErrorCode === "000") {
