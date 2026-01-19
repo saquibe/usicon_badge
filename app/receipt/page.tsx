@@ -252,12 +252,6 @@ export default function ReceiptPage() {
                         ₹{receiptData.totalAmount}
                       </span>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">
-                        Registration Category:
-                      </span>
-                      <span className="font-semibold">USI MEMBER</span>
-                    </div>
                   </div>
                 </div>
 
