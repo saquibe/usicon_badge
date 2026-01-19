@@ -161,7 +161,7 @@ export default function ReceiptPage() {
           {/* Header */}
           <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-8 text-center">
             <div className="flex justify-center mb-4">
-              <div className="relative w-48 h-16">
+              <div className="relative w-96 h-48">
                 <Image
                   src="/USICON LOGO.png"
                   alt="USICON 2026"
