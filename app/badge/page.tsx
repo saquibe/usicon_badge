@@ -287,7 +287,7 @@ export default function BadgePage() {
             onClick={() => {
               window.open("/api/certificate/download", "_blank");
             }}
-            className="h-10 text-sm bg-gradient-to-r from-green-600 to-green-800 hover:from-green-700 hover:to-green-900"
+            className="h-10 text-sm bg-gradient-to-r from-orange-600 to-orange-800 hover:from-orange-700 hover:to-orange-900"
             size="sm"
           >
             <span>
