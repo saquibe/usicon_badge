@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Loader2, Download, Share2, Receipt } from "lucide-react";
+import { Loader2, Download, Share2, Receipt, FileBadge } from "lucide-react";
 import { toPng } from "html-to-image";
 
 export default function BadgePage() {
@@ -283,8 +283,23 @@ export default function BadgePage() {
             )}
           </Button>
 
-          {/* Share Button */}
           <Button
+            onClick={() => {
+              window.open("/api/certificate/download", "_blank");
+            }}
+            className="h-10 text-sm bg-gradient-to-r from-green-600 to-green-800 hover:from-green-700 hover:to-green-900"
+            size="sm"
+          >
+            <span>
+              {" "}
+              <FileBadge className="h-3 w-3 mr-2" />
+            </span>
+            {"  "}
+            Certificate
+          </Button>
+
+          {/* Share Button */}
+          {/* <Button
             onClick={handleShare}
             disabled={loading}
             variant="outline"
@@ -293,7 +308,7 @@ export default function BadgePage() {
           >
             <Share2 className="mr-2 h-3 w-3" />
             Share
-          </Button>
+          </Button> */}
         </div>
 
         {/* Conference Info */}
